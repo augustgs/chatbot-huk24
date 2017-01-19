@@ -13,14 +13,19 @@ $senderId = $input['entry'][0]['messaging'][0]['sender']['id'];
 $messageText = $input['entry'][0]['messaging'][0]['message']['text'];
 //BEGINSEARCH
 
-  $url = "https://www.googleapis.com/customsearch/v1?key=AIzaSyDRcwlS9oPIhukZcbuGGGMoyW_gA2seGcY&cx=000237076843953083475:1w-ye2np3o4&q=".$messageText."&num=1";
+  $url = "https://www.googleapis.com/customsearch/v1?key=AIzaSyDRcwlS9oPIhukZcbuGGGMoyW_gA2seGcY&cx=000237076843953083475:1w-ye2np3o4&q=".urlencode($messageText)."&num=1";
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL,$url);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   $res = curl_exec($ch);
   $res = json_decode($res);
-  $result = $res->items[0];
-    $data_res ="Title : ".$result->title." Link : ".$result->link;
+  $items = $res->items;
+  if(count($items) > 0){
+    $result = $res->items[0];
+    $data_res = $result->link;
+  }else {
+    $data_res = "No result found";
+  }
   curl_close($ch);
 
 
